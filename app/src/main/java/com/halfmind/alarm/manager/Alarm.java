@@ -25,6 +25,10 @@ public class Alarm {
         for(int i=0;i<timeBetweenEvent.length; i++)
         {
             System.out.println("Minutos entre eventos dia " + i + ": "+ timeBetweenEvent[i]);
+            current.add(Calendar.DAY_OF_MONTH,1);
+            current.add(Calendar.MINUTE,timeBetweenEvent[i]);
+            System.out.println((current.getTime()));
+
         }
         /*
         for(int i=0;i<daysBetween;i++){
@@ -38,11 +42,15 @@ public class Alarm {
     public int[] minutesPerTime (int minutes, int times){
         int minutesPerTime[] = new int[times];
         int minutesBetweenEvent = minutes/times;
-        int minutesNotIncluded = minutes%times;
+        int minutesNotIncluded = Math.abs(minutes)%times;
         for (int i=0; i<times; i++){
             minutesPerTime[i] = minutesBetweenEvent;
             if (times-i == minutesNotIncluded) {
-                minutesPerTime[i] += 1;
+                if(minutes<0){
+                    minutesPerTime[i] -= 1;
+                }else {
+                    minutesPerTime[i] += 1;
+                }
             }
 
         }
@@ -56,7 +64,7 @@ public class Alarm {
         //Convert the times to minutes
         firstTimeMinutes = firstTimeHour * 60 + firstTimeMinutes;
         secondTimeMinutes = secondTimeHour * 60 + secondTimeMinutes;
-        int minutesBetweenAlarm = firstTimeMinutes-secondTimeMinutes;
+        int minutesBetweenAlarm = secondTimeMinutes-firstTimeMinutes;
         return minutesBetweenAlarm;
     }
     public int daysBetween(Calendar firstDate, Calendar secondDate){
