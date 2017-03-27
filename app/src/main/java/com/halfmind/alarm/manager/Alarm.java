@@ -1,10 +1,11 @@
 package com.halfmind.alarm.manager;
 
-import android.app.AlarmManager;
-import android.content.Context;
+/*import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;*/
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+//import java.util.Date;
 import java.util.GregorianCalendar;
 
 
@@ -13,20 +14,41 @@ import java.util.GregorianCalendar;
  */
 
 public class Alarm {
-    public void newGraduAlarm(Calendar current, Calendar goal, Context context){
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    public void newGraduAlarm(Calendar current, Calendar goal/*, Context context, PendingIntent alarmIntent*/){
+        //AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         int daysBetween = daysBetween(current,goal);
-        for(int i=0;i<daysBetween;i++){
-
+        int minutesBetween = minutesBetweenAlarmLinear(current,goal);
+        int timeBetweenEvent[] = minutesPerTime(minutesBetween,daysBetween);
+        System.out.println("Dias para la meta: " + daysBetween);
+        System.out.println("Minutos para la meta: "+ minutesBetween);
+        for(int i=0;i<timeBetweenEvent.length; i++)
+        {
+            System.out.println("Minutos entre eventos dia " + i + ": "+ timeBetweenEvent[i]);
         }
+        /*
+        for(int i=0;i<daysBetween;i++){
+            manager.set(AlarmManager.RTC_WAKEUP,current.getTimeInMillis(),alarmIntent);
+        }*/
 
 
 
 
     }
-    public int minutesBetweenAlarmLinear(Calendar firstAlarm, Calendar secondAlarm){
+    public int[] minutesPerTime (int minutes, int times){
+        int minutesPerTime[] = new int[times];
+        int minutesBetweenEvent = minutes/times;
+        int minutesNotIncluded = minutes%times;
+        for (int i=0; i<times; i++){
+            minutesPerTime[i] = minutesBetweenEvent;
+            if (times-i == minutesNotIncluded) {
+                minutesPerTime[i] += 1;
+            }
 
+        }
+        return  minutesPerTime;
+    }
+    public int minutesBetweenAlarmLinear(Calendar firstAlarm, Calendar secondAlarm){
         int firstTimeHour = firstAlarm.get(Calendar.HOUR_OF_DAY);
         int firstTimeMinutes = firstAlarm.get(Calendar.MINUTE);
         int secondTimeHour = secondAlarm.get(Calendar.HOUR_OF_DAY);
@@ -58,10 +80,11 @@ public class Alarm {
 
     //main for testing porpuoses
     public static void main(String[] args){
-        Calendar calendar1= new GregorianCalendar(2017,2,25);
-        Calendar calendar2 = new GregorianCalendar(2017,2,15);
+        Calendar calendar1= new GregorianCalendar(2017,2,25,8,30);
+        Calendar calendar2 = new GregorianCalendar(2017,3,15,7,45);
         calendar1.add(Calendar.DAY_OF_MONTH,10);
-
+        Alarm myAlarm = new Alarm();
+        myAlarm.newGraduAlarm(calendar1,calendar2);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd");
         System.out.println(sdf.format(calendar1.getTime()));
 
